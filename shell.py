@@ -145,6 +145,9 @@ def main():
     parser.add_argument('--vfs', required=True, help="Path to the virtual file system (tar archive)")
 
     args = parser.parse_args()
+    vfs = VirtualFileSystem(args.vfs)
+    shell = ShellEmulator(args.user, vfs)
+    shell.run()
 
 if __name__ == "__main__":
     main()
