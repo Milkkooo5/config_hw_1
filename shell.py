@@ -38,6 +38,32 @@ class ShellEmulator:
         else:
             print(f"{cmd}: command not found")
 
+    def ls(self):
+        dirs, files = self.vfs.list_dir(self.vfs.current_dir)
+        output = dirs + files
+        if output:
+            print("\n".join(output))
+        else:
+            print("No files or directories found.")
+
+    def cd(self, path):
+        try:
+            self.vfs.change_dir(path)
+        except FileNotFoundError as e:
+            print(e)
+
+    def history_cmd(self):
+        for idx, cmd in enumerate(self.history):
+            print(f"{idx + 1}  {cmd}")
+
+    def wc(self, filename):
+        node = self.vfs.get_node(os.path.join(self.vfs.current_dir, filename))
+        if node and not isinstance(node, dict):  # Ensure it's a file
+            file_size = node.size
+            print(f"{filename}: {file_size} bytes")
+        else:
+            print(f"wc: {filename}: No such file")
+
 
 def main():
     parser = argparse.ArgumentParser(description="Shell Emulator")
