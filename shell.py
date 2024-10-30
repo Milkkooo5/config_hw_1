@@ -10,6 +10,21 @@ class VirtualFileSystem:
         self.current_dir = '/.'
         self.file_tree = self.build_file_tree()
 
+    def build_file_tree(self):
+        file_tree = {}
+        for member in self.tar.getmembers():
+            path_parts = member.name.strip('/').split('/')
+            current = file_tree
+            for part in path_parts[:-1]:
+                if part not in current:
+                    current[part] = {}
+                current = current[part]
+            if member.isdir():
+                current[path_parts[-1]] = {}
+            else:
+                current[path_parts[-1]] = member
+        return file_tree
+
 
 class ShellEmulator:
     def __init__(self, username, vfs):
