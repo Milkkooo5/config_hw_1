@@ -3,6 +3,14 @@ import tarfile
 import argparse
 from datetime import datetime
 
+class VirtualFileSystem:
+    def __init__(self, tar_path):
+        self.tar_path = tar_path
+        self.tar = tarfile.open(tar_path, 'r')
+        self.current_dir = '/.'
+        self.file_tree = self.build_file_tree()
+
+
 class ShellEmulator:
     def __init__(self, username, vfs):
         self.username = username
@@ -63,6 +71,8 @@ class ShellEmulator:
             print(f"{filename}: {file_size} bytes")
         else:
             print(f"wc: {filename}: No such file")
+
+
 
 
 def main():
