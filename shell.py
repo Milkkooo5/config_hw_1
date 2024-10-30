@@ -25,6 +25,55 @@ class VirtualFileSystem:
                 current[path_parts[-1]] = member
         return file_tree
 
+    def list_dir(self, path):
+        node = self.get_node(path)
+        if node is not None and isinstance(node, dict):
+            dirs = [item + '/' for item in node if isinstance(node[item], dict)]
+            files = [item for item in node if not isinstance(node[item], dict)]
+            return dirs, files
+        return [], []
+
+    def change_dir(self, path):
+        if path == "/":
+            self.current_dir = "/."
+            return
+        parts = path.split('/')
+        if path.startswith('/'):
+            new_dir = ["."]
+        else:
+            new_dir = self.current_dir.strip('/').split('/')
+        for part in parts:
+            if part == "..":
+                if len(new_dir) > 1:
+                    new_dir.pop()
+            elif part == "." or part == "":
+                continue
+            else:
+                new_dir.append(part)
+        full_path = "/" + "/".join(new_dir).strip('/')
+        if self.get_node(full_path) is not None:
+            self.current_dir = full_path
+        else:
+            raise FileNotFoundError(f"cd: no such file or directory: {path}")
+
+    def get_node(self, path):
+        parts = path.strip("/").split('/')
+        current = self.file_tree
+        for part in parts:
+            if part and part in current:
+                current = current[part]
+            else:
+                return None
+        return current
+
+    def remove(self, path):
+        full_path = os.path.join(self.current_dir, path).replace("\\", "/").strip('/')
+        parts = full_path.split('/')
+        node = self.file_tree
+        for part in parts[:-1]:
+            node = node[part]
+        del node[parts[-1]]
+
 
 class ShellEmulator:
     def __init__(self, username, vfs):
