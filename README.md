@@ -112,5 +112,9 @@ tar. Эмулятор должен работать в режиме CLI.
 # Результаты тестирования
 
 
+![image](https://github.com/user-attachments/assets/a6386da8-f992-4843-8e80-e065bcc64206)
+
+
+
 
 
