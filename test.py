@@ -3,6 +3,7 @@ from unittest.mock import Mock
 import os
 import tarfile
 
+
 from shell import VirtualFileSystem, ShellEmulator  # Замените your_module на имя вашего файла
 
 class TestVirtualFileSystem(unittest.TestCase):
