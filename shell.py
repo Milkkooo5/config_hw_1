@@ -7,7 +7,7 @@ class VirtualFileSystem:
     def __init__(self, tar_path):
         self.tar_path = tar_path
         self.tar = tarfile.open(tar_path, 'r')
-        self.current_dir = '/test_dir'
+        self.current_dir = '/.virtual_fs'
         self.file_tree = self.build_file_tree()
 
     def build_file_tree(self):
