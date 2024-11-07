@@ -128,13 +128,23 @@ class ShellEmulator:
         for idx, cmd in enumerate(self.history):
             print(f"{idx + 1}  {cmd}")
 
-    def wc(self, filename):
-        node = self.vfs.get_node(os.path.join(self.vfs.current_dir, filename))
-        if node and not isinstance(node, dict):  # Ensure it's a file
-            file_size = node.size
-            print(f"{filename}: {file_size} bytes")
+     def wc(self, filename):
+        full_path = os.path.join(self.vfs.current_dir.strip('/'), filename).replace("\\", "/")
+        node = self.vfs.get_node(full_path)
+        if node and not isinstance(node, dict):
+            try:
+                with self.vfs.tar.extractfile(node) as file:
+                    if file is not None:
+                        content = file.read().decode('utf-8')
+                        word_count = len(content.split())
+                        print(f"{filename}: {word_count} words")
+                    else:
+                        print(f"wc: {filename}: Error reading file")
+            except KeyError:
+                print(f"wc: {filename}: No such file in the archive")
         else:
             print(f"wc: {filename}: No such file")
+
 
 
 
